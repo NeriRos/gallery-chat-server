@@ -16,6 +16,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+var webSocketOptions = new WebSocketOptions
+{
+    AllowedOrigins = { "http://localhost" }
+};
+
+app.UseWebSockets(webSocketOptions);
+
 app.UseAuthorization();
 
 app.MapControllers();
