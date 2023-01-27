@@ -15,6 +15,7 @@ public class ChatController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet]
     [Route("/chat")]
     public async Task Get()
     {
