@@ -7,7 +7,7 @@ public class Chat
 
     public void AddMessage(Message Message)
     {
-        this._Messages.Append(Message);
+        this._Messages.Add(Message);
     }
 
     public Message[] Messages
@@ -29,10 +29,3 @@ public class Message
     public string Text { get; set; }
     public DateTime Date { get; set; } = DateTime.Now;
 }
-
-public class User
-{
-    public int Id { get; set; }
-    public int UserName { get; set; }
-}
-
