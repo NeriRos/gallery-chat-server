@@ -2,7 +2,13 @@
 
 public class Chat
 {
-    public int ImageId { get; set; }
+    public Chat(string ImageId)
+    {
+        this.ImageId = ImageId;
+    }
+
+    public Guid Id { get; } = Guid.NewGuid();
+    public string ImageId { get; set; }
     private List<Message> _Messages = new List<Message>();
 
     public void AddMessage(Message Message)
@@ -19,13 +25,16 @@ public class Chat
 
 public class Message
 {
-    Message(User Sender, String Text)
+    public Message(string ChatId, User Sender, string Text)
     {
+        this.ChatId = ChatId;
         this.Sender = Sender;
         this.Text = Text;
     }
 
-    public User Sender { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
+    public string ChatId { get; }
+    public User Sender { get; }
     public string Text { get; set; }
-    public DateTime Date { get; set; } = DateTime.Now;
+    public DateTime Date { get; } = DateTime.Now;
 }

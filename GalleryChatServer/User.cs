@@ -2,7 +2,12 @@
 
 public class User
 {
-    public int Id { get; set; }
-    public int UserName { get; set; }
+    public User(string Username)
+    {
+        this.Username = Username;
+    }
+
+    public Guid Id { get; } = Guid.NewGuid();
+    public string Username { get; set; }
 }
 

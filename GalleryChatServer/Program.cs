@@ -1,31 +1,42 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using GalleryChatServer;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder => builder
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseCors("CorsPolicy");
+app.UseHttpsRedirection();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-var webSocketOptions = new WebSocketOptions
-{
-    AllowedOrigins = { "http://localhost" }
-};
 
-app.UseWebSockets(webSocketOptions);
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chat");
 
 app.Run();
 
