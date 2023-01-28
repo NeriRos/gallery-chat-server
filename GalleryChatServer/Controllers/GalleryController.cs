@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-
 namespace GalleryChatServer.Controllers;
+
 
 [ApiController]
 [Route("[controller]")]
@@ -16,16 +16,46 @@ public class GalleryController : ControllerBase
 
     [HttpGet]
     [Route("/images")]
-    public Image[] Get()
+    public GalleryItem[] GetImages()
     {
-        List<Image> Images = new List<Image>();
+        List<GalleryItem> Items = new List<GalleryItem>();
 
-        for (int i = 1; i < 8; i++)
+        for (int i = 1; i <= 8; i++)
         {
-            Images.Add(new Image($"/image{i}.png"));
+            Image image = new Image($"http://localhost:5251/images/{i}.jpg");
+
+            Items.Add(new GalleryItem
+            {
+                Id = i.ToString(),
+                Author = GalleryChatServer.User.getTestUser(i),
+                Description = "Test description",
+                Title = i % 2 == 0 ? "Test title" : "Odd title",
+                Image = image
+            });
         }
 
-        return Images.ToArray();
+        return Items.ToArray();
+    }
+
+    [HttpGet]
+    [Route("/image/{id}")]
+    public GalleryItem? GetById(string id)
+    {
+        if (int.TryParse(id, out int Id))
+        {
+            Image image = new Image($"http://localhost:5251/images/{Id}.jpg");
+
+            return new GalleryItem
+            {
+                Id = Id.ToString(),
+                Author = GalleryChatServer.User.getTestUser(Id),
+                Description = "Test description",
+                Title = Id % 2 == 0 ? "Test title" : "Odd title",
+                Image = image
+            };
+        }
+
+        return null;
     }
 }
 

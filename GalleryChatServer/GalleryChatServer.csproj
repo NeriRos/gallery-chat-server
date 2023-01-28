@@ -16,4 +16,10 @@
   <ItemGroup>
     <None Remove="Microsoft.AspNetCore.SignalR" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 </Project>

@@ -8,9 +8,8 @@ namespace GalleryChatServer
     {
         private IDictionary<string, Chat> chats = new Dictionary<string, Chat>();
 
-        public async Task NewMessage(string Username, string id, string message)
+        public async Task NewMessage(User sender, string id, string message)
         {
-            User sender = new User(Username);
             Message messageObject = new Message(id, sender, message);
             Chat chat;
 
