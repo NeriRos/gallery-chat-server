@@ -11,19 +11,12 @@ namespace GalleryChatServer
         public async Task NewMessage(User sender, string id, string message)
         {
             Message messageObject = new Message(id, sender, message);
-            Chat chat;
 
-            if (this.chats.ContainsKey(id))
-            {
-                chat = this.chats[id];
-            }
-            else
-            {
-                chat = new Chat(id);
-                this.chats.Add(id, chat);
+            if (!this.chats.ContainsKey(id)) {
+                this.chats.Add(id, new Chat(id));
             }
 
-            chat.AddMessage(messageObject);
+            chats[id].AddMessage(messageObject);
 
             await Clients.All.SendAsync($"new_message-{id}", messageObject);
         }
