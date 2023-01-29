@@ -15,8 +15,6 @@ public class User
 
     public static User getTestUser(int? i = null)
     {
-        int index = (int)(i.HasValue ? (i.Value > 4 ? 4 : i) : new Random().Next(1, 5));
-
         string[,] user_details = new string[,] {
             { "neri.coder", "Neriya Rosner" },
             {"josh.doe", "Josh Doe" },
@@ -24,6 +22,8 @@ public class User
             {"michael.jackson", "Micheal Jackson" },
             {"donna.primadona", "Donna Primadona" },
         };
+
+        int index = (int)(i.HasValue && i.Value < user_details.GetLength(0) ? i.Value : new Random().Next(0, user_details.GetLength(0)- 1));
 
         string username = user_details[index, 0];
         string name = user_details[index, 1];

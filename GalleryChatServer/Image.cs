@@ -2,9 +2,9 @@
 
 public class Image
 {
-    public Image(String Path)
+    public Image(string Path, string Id)
     {
-        this.Id = Path;
+        this.Id = Id;
         this.Path = Path;
     }
 

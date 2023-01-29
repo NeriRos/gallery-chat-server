@@ -22,13 +22,13 @@ public class GalleryController : ControllerBase
 
         for (int i = 1; i <= 8; i++)
         {
-            Image image = new Image($"http://localhost:5251/images/{i}.jpg");
+            Image image = new Image($"http://localhost:5251/images/{i}.jpg", i.ToString());
 
             Items.Add(new GalleryItem
             {
                 Id = i.ToString(),
                 Author = GalleryChatServer.User.getTestUser(i),
-                Description = "Test description",
+                Description = i % 2 == 0 ? "Test description" : "Very odd image",
                 Title = i % 2 == 0 ? "Test title" : "Odd title",
                 Image = image
             });
@@ -43,7 +43,7 @@ public class GalleryController : ControllerBase
     {
         if (int.TryParse(id, out int Id))
         {
-            Image image = new Image($"http://localhost:5251/images/{Id}.jpg");
+            Image image = new Image($"http://localhost:5251/images/{Id}.jpg", Id.ToString());
 
             return new GalleryItem
             {
