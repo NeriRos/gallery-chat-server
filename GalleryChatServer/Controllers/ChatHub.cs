@@ -16,15 +16,14 @@ namespace GalleryChatServer
         }
 
         public string GetConnectionId() => Context.ConnectionId;
+        public static string GetGroupId(string chatId) => $"chat-{chatId}";
 
-        public async Task AddToChat(string groupName) => await Groups.AddToGroupAsync(this.GetConnectionId(), groupName);
-
-        public async Task RemoveFromChat(string? groupName)
+        public async Task Init(string id)
         {
-            string chatId = this.ChatService.RemoveFromChat(this.GetConnectionId());
-            groupName = groupName ?? $"chat-{chatId}";
+            Chat chat = this.ChatService.CreateChat(id);
+            await this.AddToChat(chat.Id.ToString(), GetGroupId(id));
 
-            await Groups.RemoveFromGroupAsync(this.GetConnectionId(), groupName);
+            await Clients.Client(this.GetConnectionId()).SendAsync("init", this.ChatService.GetChat(id));
         }
 
         public async Task NewMessage(User sender, string id, string message)
@@ -33,19 +32,35 @@ namespace GalleryChatServer
 
             this.ChatService.AddMessage(id, messageObject);
 
-            await Clients.All.SendAsync($"new_message-{id}", messageObject);
+            await Clients.Group(GetGroupId(id)).SendAsync("newMessage", messageObject);
         }
 
-        public async Task Init(string id)
+        public async Task AddToChat(string chatId, string groupName)
         {
-            this.ChatService.CreateChat(id);
-            await this.AddToChat($"chat-{id}");
-            //All.SendAsync($"init-{id}", this.ChatService.GetChat(id););
+            this.ChatService.AddToChat(chatId, this.GetConnectionId());
+            await Groups.AddToGroupAsync(this.GetConnectionId(), groupName);
         }
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public async Task RemoveFromChat(string? groupName = null)
         {
-            this.RemoveFromChat(null);
+            if (groupName == null)
+            {
+                string? chatId = this.ChatService.RemoveFromChat(this.GetConnectionId());
+
+                if (chatId == null)
+                {
+                    return;
+                }
+
+                groupName = GetGroupId(chatId);
+            }
+
+            await Groups.RemoveFromGroupAsync(this.GetConnectionId(), groupName);
+        }
+
+        public override Task OnDisconnectedAsync(Exception? exception)
+        {
+            Task task = this.RemoveFromChat();
 
             return base.OnDisconnectedAsync(exception);
         }

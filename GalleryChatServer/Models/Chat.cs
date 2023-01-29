@@ -2,13 +2,11 @@
 
 public class Chat
 {
-    public Chat(string ImageId)
+    public Chat(string Id)
     {
-        this.ImageId = ImageId;
+        this.Id = Id;
     }
-
-    public Guid Id { get; } = Guid.NewGuid();
-    public string ImageId { get; set; }
+    public string Id { get; set; }
     private List<Message> _Messages = new List<Message>();
 
     public void AddMessage(Message Message)
