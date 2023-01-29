@@ -17,6 +17,8 @@ builder.Services.AddCors(options =>
         .AllowCredentials());
 });
 
+builder.Services.AddSingleton<GalleryChatServer.Services.ChatService>();
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
